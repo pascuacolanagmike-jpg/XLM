@@ -97,7 +97,10 @@ app.use((req, res) => {
     --danger: #fa383e;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
     --gradient: linear-gradient(135deg, #1877f2 0%, #9360f7 100%);
+    --auth-bg: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    --input-bg: #f5f6f7;
   }
 
   :root[data-theme="dark"] {
@@ -114,7 +117,10 @@ app.use((req, res) => {
     --danger: #fa383e;
     --shadow-sm: 0 1px 2px rgba(255, 255, 255, 0.05);
     --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.4);
     --gradient: linear-gradient(135deg, #2e89ff 0%, #a36bff 100%);
+    --auth-bg: linear-gradient(135deg, #1e0a29 0%, #0a1929 100%);
+    --input-bg: #3a3b3c;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -130,177 +136,135 @@ app.use((req, res) => {
   button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
   input, textarea { font-family: inherit; color: var(--text-main); }
 
-  /* ============ LANDING PAGE ============ */
-  #landing-view { display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
-  
-  .landing-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 40px; max-width: 1200px; margin: 0 auto; width: 100%;
-    position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+  /* ============ PREMIUM AUTH SCREENS ============ */
+  #auth-view {
+    display: none; min-height: 100vh; align-items: center; justify-content: center;
+    background: var(--bg); padding: 20px;
   }
-  .landing-logo { font-size: 28px; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
-  .landing-actions { display: flex; gap: 12px; }
-  
-  .btn-landing {
-    padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 15px;
-    transition: transform 0.2s, background 0.2s;
-  }
-  .btn-landing.primary { background: var(--primary); color: white; }
-  .btn-landing.primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
-  .btn-landing.outline { border: 2px solid var(--border); color: var(--text-main); }
-  .btn-landing.outline:hover { border-color: var(--text-main); transform: translateY(-2px); }
 
-  .hero {
-    flex: 1; display: flex; align-items: center; justify-content: center;
-    max-width: 1200px; margin: 0 auto; width: 100%; padding: 120px 40px 60px;
-    gap: 60px;
+  .auth-container {
+    display: flex; width: 100%; max-width: 1000px; min-height: 600px;
+    background: var(--card); border-radius: 24px; overflow: hidden;
+    box-shadow: var(--shadow-card); animation: fadeUp 0.6s ease-out;
   }
-  .hero-text { flex: 1; max-width: 500px; animation: slideUp 0.8s ease-out; }
-  .hero-title { font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -2px; }
-  .hero-title span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .hero-subtitle { font-size: 20px; color: var(--text-secondary); margin-bottom: 32px; line-height: 1.4; }
-  
-  .hero-visual { flex: 1; position: relative; height: 400px; display: flex; align-items: center; justify-content: center; }
-  
-  /* Floating Mockups */
-  .mockup-card {
-    background: var(--card); border-radius: 12px; box-shadow: var(--shadow-lg);
-    padding: 16px; width: 320px; position: absolute;
-    animation: float 6s ease-in-out infinite;
-  }
-  .mockup-card.main { z-index: 2; transform: translateY(0); animation-delay: 0s; }
-  .mockup-card.back-1 { z-index: 1; transform: translate(60px, -40px) scale(0.9); opacity: 0.6; animation-delay: 1s; }
-  .mockup-card.back-2 { z-index: 0; transform: translate(-60px, 40px) scale(0.8); opacity: 0.3; animation-delay: 2s; }
-  
-  .mockup-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .mockup-avatar { width: 40px; height: 40px; border-radius: 50%; background: #1877f2; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-  .mockup-name { font-weight: 700; font-size: 15px; }
-  .mockup-time { font-size: 12px; color: var(--text-secondary); }
-  .mockup-text { font-size: 15px; line-height: 1.4; margin-bottom: 12px; }
-  .mockup-image { width: 100%; height: 160px; border-radius: 8px; background: linear-gradient(45deg, #a1c4fd, #c2e9fb); }
-  .mockup-tone { margin-top: 12px; padding: 8px 12px; border-radius: 8px; background: rgba(24, 119, 242, 0.1); color: var(--primary); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
 
-  .features { padding: 80px 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
-  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px; }
-  .feature-card { background: var(--card); padding: 30px; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: left; transition: transform 0.3s, box-shadow 0.3s; }
-  .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--bg); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-  .feature-icon svg { width: 24px; height: 24px; fill: var(--primary); }
-  .feature-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
-  .feature-desc { color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
-
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(40px); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ============ AUTH SCREENS ============ */
-  #auth-view {
-    display: none; min-height: 100vh; align-items: center; justify-content: center;
-    background-color: var(--bg); padding: 20px; gap: 60px;
+  /* Left Side (Branding) */
+  .auth-left {
+    flex: 1; background: var(--gradient); padding: 60px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden; color: white;
   }
   
-  .auth-left { max-width: 500px; padding-bottom: 60px; }
-  .auth-logo-large { font-size: 60px; font-weight: 800; color: var(--primary); letter-spacing: -2px; line-height: 1; margin-bottom: 10px; }
-  .auth-tagline { font-size: 28px; font-weight: 400; line-height: 1.2; }
-  
-  .auth-right { width: 396px; }
-  .auth-card {
-    background: var(--card); border-radius: 8px; padding: 20px 20px 28px;
-    box-shadow: var(--shadow-lg); text-align: center; margin-bottom: 28px;
+  /* Abstract floating shapes */
+  .auth-left::before, .auth-left::after {
+    content: ''; position: absolute; border-radius: 50%; background: rgba(255,255,255,0.1);
+  }
+  .auth-left::before { width: 300px; height: 300px; top: -100px; right: -100px; }
+  .auth-left::after { width: 200px; height: 200px; bottom: -50px; left: -50px; }
+
+  .auth-logo-large { font-size: 48px; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; position: relative; z-index: 2; }
+  .auth-tagline { font-size: 28px; font-weight: 500; line-height: 1.3; position: relative; z-index: 2; opacity: 0.95; }
+
+  /* Right Side (Forms) */
+  .auth-right {
+    flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center;
+    background: var(--card);
+  }
+
+  .auth-form-header { margin-bottom: 30px; }
+  .auth-form-title { font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; }
+  .auth-form-sub { font-size: 15px; color: var(--text-secondary); }
+
+  /* Modern Inputs with Icons */
+  .input-group { position: relative; margin-bottom: 16px; }
+  .input-icon {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; fill: var(--text-secondary); pointer-events: none;
   }
   .form-input {
-    width: 100%; padding: 14px 16px; margin-bottom: 12px; border-radius: 6px;
-    border: 1px solid var(--border); background: var(--card); font-size: 17px;
+    width: 100%; padding: 16px 16px 16px 48px; border-radius: 12px;
+    border: 2px solid transparent; background: var(--input-bg);
+    font-size: 16px; color: var(--text-main); transition: all 0.2s ease;
   }
-  .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(24,119,242,0.2); }
-  
+  .form-input:focus {
+    outline: none; border-color: var(--primary); background: var(--card);
+    box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.15);
+  }
+  .form-input::placeholder { color: var(--text-secondary); font-weight: 400; }
+
+  /* Side-by-side inputs for Names */
+  .input-row { display: flex; gap: 12px; }
+  .input-row .input-group { flex: 1; margin-bottom: 16px; }
+
+  /* Buttons */
   .btn-auth {
-    width: 100%; padding: 14px; border-radius: 6px; background: var(--primary);
-    color: white; font-weight: 700; font-size: 20px; margin-bottom: 16px;
-    transition: background 0.2s;
+    width: 100%; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 17px;
+    transition: all 0.2s ease; margin-top: 10px;
   }
-  .btn-auth:hover { background: var(--primary-hover); }
+  .btn-auth.primary {
+    background: var(--primary); color: white;
+  }
+  .btn-auth.primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(24,119,242,0.3); }
   
-  .auth-links a { color: var(--primary); font-size: 14px; text-decoration: none; cursor: pointer; }
+  .btn-auth.success {
+    background: var(--success); color: white;
+  }
+  .btn-auth.success:hover { background: var(--success-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(66,183,42,0.3); }
+
+  .auth-divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: var(--text-secondary); font-size: 14px; font-weight: 500; }
+  .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+  .auth-divider::before { margin-right: 10px; }
+  .auth-divider::after { margin-left: 10px; }
+
+  .auth-links { text-align: center; font-size: 15px; color: var(--text-secondary); margin-top: 20px; }
+  .auth-links a { color: var(--primary); font-weight: 600; text-decoration: none; cursor: pointer; }
   .auth-links a:hover { text-decoration: underline; }
-  
-  .auth-divider { border-bottom: 1px solid var(--border); margin: 20px 0; }
-  
-  .btn-success {
-    background: var(--success); color: white; font-size: 17px; font-weight: 700;
-    padding: 14px 16px; border-radius: 6px; display: inline-block; transition: background 0.2s;
-  }
-  .btn-success:hover { background: var(--success-hover); }
+
+  .terms-text { font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin: 16px 0; text-align: left; }
+  .terms-text a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  .terms-text a:hover { text-decoration: underline; }
 
   /* ============ MAIN APP LAYOUT ============ */
   #app-layout { display: none; min-height: 100vh; flex-direction: column; background: var(--bg); }
-
-  .top-nav {
-    position: sticky; top: 0; z-index: 100; height: 56px;
-    background: var(--card); box-shadow: var(--shadow-sm);
-    display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
-  }
+  .top-nav { position: sticky; top: 0; z-index: 100; height: 56px; background: var(--card); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
   .nav-left { display: flex; align-items: center; gap: 10px; width: 300px; }
   .nav-logo { font-size: 32px; font-weight: 800; color: var(--primary); letter-spacing: -1.5px; }
   .nav-search { position: relative; width: 100%; max-width: 240px; }
-  .nav-search input {
-    width: 100%; padding: 10px 16px 10px 36px; border-radius: 99px;
-    background: var(--bg); border: 1px solid transparent; font-size: 15px;
-  }
+  .nav-search input { width: 100%; padding: 10px 16px 10px 36px; border-radius: 99px; background: var(--bg); border: 1px solid transparent; font-size: 15px; }
   .nav-search input:focus { outline: none; border-color: var(--primary); background: var(--card); }
   .nav-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); fill: var(--text-secondary); width: 16px; height: 16px; }
-
   .nav-center { display: flex; gap: 8px; height: 100%; flex: 1; justify-content: center; }
-  .nav-tab {
-    width: 100px; height: 100%; display: flex; align-items: center; justify-content: center;
-    border-bottom: 3px solid transparent; color: var(--text-secondary); cursor: pointer;
-  }
+  .nav-tab { width: 100px; height: 100%; display: flex; align-items: center; justify-content: center; border-bottom: 3px solid transparent; color: var(--text-secondary); cursor: pointer; }
   .nav-tab:hover { background: var(--hover); border-radius: 8px; }
   .nav-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
   .nav-tab svg { width: 28px; height: 28px; fill: currentColor; }
-
   .nav-right { display: flex; align-items: center; gap: 8px; width: 300px; justify-content: flex-end; }
-  .nav-icon-btn {
-    width: 40px; height: 40px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center;
-  }
+  .nav-icon-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; }
   .nav-icon-btn:hover { background: var(--hover); }
   .nav-icon-btn svg { width: 20px; height: 20px; fill: var(--text-main); }
   .nav-avatar { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
 
   .main-container { display: flex; max-width: 1600px; margin: 0 auto; width: 100%; padding-top: 16px; gap: 32px; }
-
   .left-sidebar { width: 280px; flex-shrink: 0; padding-left: 16px; position: sticky; top: 72px; height: calc(100vh - 72px); overflow-y: auto; }
-  .sidebar-item {
-    display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 8px;
-    font-weight: 500; font-size: 15px; cursor: pointer; margin-bottom: 4px;
-  }
+  .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 8px; font-weight: 500; font-size: 15px; cursor: pointer; margin-bottom: 4px; }
   .sidebar-item:hover { background: var(--hover); }
   .sidebar-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; flex-shrink: 0; }
   .sidebar-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .sidebar-icon svg { width: 24px; height: 24px; }
 
   .feed-column { flex: 1; max-width: 680px; margin: 0 auto; padding-bottom: 40px; }
-  
   .composer { background: var(--card); border-radius: 8px; padding: 12px 16px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
   .composer-top { display: flex; gap: 8px; margin-bottom: 12px; }
-  .composer-input {
-    flex: 1; padding: 8px 12px; border-radius: 20px; background: var(--hover);
-    border: none; font-size: 17px; resize: none; outline: none; min-height: 40px;
-    display: flex; align-items: center; color: var(--text-main);
-  }
+  .composer-input { flex: 1; padding: 8px 12px; border-radius: 20px; background: var(--hover); border: none; font-size: 17px; resize: none; outline: none; min-height: 40px; display: flex; align-items: center; color: var(--text-main); }
   .composer-input::placeholder { color: var(--text-secondary); }
   .composer-divider { height: 1px; background: var(--border); margin: 0 -16px 12px; }
   .composer-actions { display: flex; justify-content: space-between; align-items: center; }
-  .composer-btn {
-    display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px;
-    font-weight: 600; font-size: 15px; color: var(--text-secondary); flex: 1; justify-content: center;
-  }
+  .composer-btn { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 15px; color: var(--text-secondary); flex: 1; justify-content: center; }
   .composer-btn:hover { background: var(--hover); }
 
   .post { background: var(--card); border-radius: 8px; box-shadow: var(--shadow-sm); margin-bottom: 16px; overflow: hidden; }
@@ -310,36 +274,22 @@ app.use((req, res) => {
   .post-time { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
   .post-text { padding: 4px 16px 16px; font-size: 15px; white-space: pre-wrap; }
   .post-image { width: 100%; max-height: 500px; object-fit: cover; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  
   .post-stats { padding: 10px 16px; display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 15px; border-bottom: 1px solid var(--border); margin: 0 16px; }
   .post-actions { display: flex; padding: 4px; margin: 0 16px; }
-  .post-action-btn {
-    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 6px; border-radius: 4px; font-weight: 600; color: var(--text-secondary); font-size: 15px;
-  }
+  .post-action-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 6px; border-radius: 4px; font-weight: 600; color: var(--text-secondary); font-size: 15px; }
   .post-action-btn:hover { background: var(--hover); }
 
   .comments-area { display: none; padding: 12px 16px; background: var(--card); }
   .comments-area.open { display: block; }
-  
   .comment-composer { display: flex; gap: 8px; margin-bottom: 12px; align-items: flex-start; }
   .comment-input-wrap { flex: 1; background: var(--hover); border-radius: 16px; padding: 8px 12px; }
-  .comment-input {
-    width: 100%; background: transparent; border: none; font-size: 15px; resize: none; outline: none; min-height: 24px;
-  }
-  
+  .comment-input { width: 100%; background: transparent; border: none; font-size: 15px; resize: none; outline: none; min-height: 24px; }
   .inline-tone-container { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
-  .inline-tone-badge {
-    display: none; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
-    background: var(--card); padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border);
-    color: var(--text-secondary);
-  }
+  .inline-tone-badge { display: none; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; background: var(--card); padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); color: var(--text-secondary); }
   .inline-tone-badge.show { display: inline-flex; }
   .inline-tone-emoji { font-size: 16px; }
-  
   .reply-btn { background: transparent; color: var(--primary); font-weight: 600; padding: 6px 12px; border-radius: 6px; font-size: 14px; }
   .reply-btn:hover { background: var(--hover); }
-  
   .comment-item { display: flex; gap: 8px; margin-bottom: 8px; }
   .comment-bubble { background: var(--hover); padding: 8px 12px; border-radius: 16px; font-size: 14px; max-width: 100%; }
   .comment-bubble .name { font-weight: 600; display: block; margin-bottom: 2px; }
@@ -357,129 +307,126 @@ app.use((req, res) => {
   }
   @media (max-width: 900px) {
     .left-sidebar { display: none; }
-    .hero { flex-direction: column; padding-top: 100px; text-align: center; }
-    .hero-visual { display: none; }
-    .features-grid { grid-template-columns: 1fr; }
+    .auth-left { display: none; }
+    .auth-right { padding: 40px 20px; }
+    .auth-container { max-width: 450px; min-height: auto; }
   }
   @media (max-width: 800px) {
     .nav-left .nav-search { display: none; }
     .nav-tab { width: 60px; }
-    #auth-view { flex-direction: column; gap: 20px; padding-top: 40px; }
-    .auth-left { text-align: center; padding-bottom: 0; }
   }
 </style>
 </head>
 <body>
 
-<!-- LANDING VIEW -->
-<div id="landing-view">
-  <nav class="landing-nav">
-    <div class="landing-logo">Friendlist</div>
-    <div class="landing-actions">
-      <button class="btn-landing outline" onclick="showAuth('login')">Log In</button>
-      <button class="btn-landing primary" onclick="showAuth('signup')">Sign Up</button>
-    </div>
-  </nav>
-
-  <section class="hero">
-    <div class="hero-text">
-      <h1 class="hero-title">Connect with <span>friends</span> who actually get you.</h1>
-      <p class="hero-subtitle">The social network that understands your tone. Share moments, express yourself, and build real relationships in a safe, AI-moderated community.</p>
-      <button class="btn-landing primary" style="padding: 16px 32px; font-size: 18px;" onclick="showAuth('signup')">Get Started</button>
-    </div>
-    
-    <div class="hero-visual">
-      <div class="mockup-card back-2">
-        <div class="mockup-header">
-          <div class="mockup-avatar" style="background:#f02849;">SJ</div>
-          <div><div class="mockup-name">Sarah J.</div><div class="mockup-time">2m ago</div></div>
-        </div>
-        <div class="mockup-text">Just launched my new project! 🚀</div>
-      </div>
-      <div class="mockup-card back-1">
-        <div class="mockup-header">
-          <div class="mockup-avatar" style="background:#42b72a;">MK</div>
-          <div><div class="mockup-name">Mike K.</div><div class="mockup-time">5m ago</div></div>
-        </div>
-        <div class="mockup-text">This app is incredibly fast.</div>
-      </div>
-      <div class="mockup-card main">
-        <div class="mockup-header">
-          <div class="mockup-avatar">JD</div>
-          <div><div class="mockup-name">John Doe</div><div class="mockup-time">Just now</div></div>
-        </div>
-        <div class="mockup-text">I absolutely love the new tone analysis feature. It keeps the community safe and positive!</div>
-        <div class="mockup-image"></div>
-        <div class="mockup-tone">
-          <span style="font-size:20px;">😊</span> Joy · 98% Confidence
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="features">
-    <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 16px;">Why choose Friendlist?</h2>
-    <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">We've built a social experience that prioritizes genuine connection and community safety.</p>
-    
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg></div>
-        <h3 class="feature-title">Real-time AI Moderation</h3>
-        <p class="feature-desc">Our built-in AI detects toxic and offensive language before you post, keeping the community safe.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7C15.12 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5C7.34 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V19h11v-2.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V19h7v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z"/></svg></div>
-        <h3 class="feature-title">Genuine Connections</h3>
-        <p class="feature-desc">Connect with friends, share your moments, and engage in meaningful conversations.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></div>
-        <h3 class="feature-title">Emotion Aware</h3>
-        <p class="feature-desc">See the emotion behind every comment with our advanced tone analysis engine.</p>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- AUTH VIEW -->
+<!-- PREMIUM AUTH VIEW -->
 <div id="auth-view">
-  <div class="auth-left">
-    <div class="auth-logo-large">Friendlist</div>
-    <div class="auth-tagline">Connect with friends and the world around you on Friendlist.</div>
-  </div>
-
-  <div class="auth-right">
-    <div id="login-block" class="auth-card">
-      <input class="form-input" type="text" id="login-user" placeholder="Email address or username">
-      <input class="form-input" type="password" id="login-pass" placeholder="Password">
-      <button class="btn-auth" onclick="handleLogin()">Log In</button>
-      <div class="auth-links">
-        <a onclick="switchAuth('forgot')">Forgotten password?</a>
-      </div>
-      <div class="auth-divider"></div>
-      <button class="btn-success" onclick="switchAuth('signup')">Create New Account</button>
+  <div class="auth-container">
+    <!-- Left Side (Branding) -->
+    <div class="auth-left">
+      <div class="auth-logo-large">Friendlist</div>
+      <div class="auth-tagline">Connect with friends and the world around you on Friendlist.</div>
     </div>
 
-    <div id="signup-block" class="auth-card" style="display:none;">
-      <div style="font-size: 24px; font-weight: 700; margin-bottom: 4px;">Create a new account</div>
-      <div style="color: var(--text-secondary); margin-bottom: 16px; font-size: 15px;">It's quick and easy.</div>
-      <div class="auth-divider" style="margin: 10px 0 16px;"></div>
-      <input class="form-input" type="text" id="signup-user" placeholder="Username">
-      <input class="form-input" type="password" id="signup-pass" placeholder="New password">
-      <button class="btn-success" onclick="handleSignup()" style="width: 100%; margin-top: 10px;">Sign Up</button>
-      <div class="auth-links" style="margin-top: 16px;">
-        <a onclick="switchAuth('login')" style="font-size: 15px;">Already have an account?</a>
-      </div>
-    </div>
+    <!-- Right Side (Forms) -->
+    <div class="auth-right">
+      
+      <!-- LOGIN FORM -->
+      <div id="login-block" class="auth-form">
+        <div class="auth-form-header">
+          <h2 class="auth-form-title">Welcome back</h2>
+          <p class="auth-form-sub">Log in to continue to your feed.</p>
+        </div>
 
-    <div id="forgot-block" class="auth-card" style="display:none;">
-      <div style="font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: left;">Reset Password</div>
-      <input class="form-input" type="text" id="forgot-user" placeholder="Username">
-      <input class="form-input" type="password" id="forgot-pass" placeholder="New Password">
-      <button class="btn-auth" onclick="handleForgot()" style="font-size: 17px;">Reset Password</button>
-      <div class="auth-links" style="margin-top: 16px;">
-        <a onclick="switchAuth('login')">Back to Login</a>
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <input class="form-input" type="text" id="login-user" placeholder="Email address or Username">
+        </div>
+        
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+          <input class="form-input" type="password" id="login-pass" placeholder="Password">
+        </div>
+
+        <button class="btn-auth primary" onclick="handleLogin()">Log In</button>
+        
+        <div class="auth-links" style="margin-bottom: 24px;">
+          <a onclick="switchAuth('forgot')">Forgotten password?</a>
+        </div>
+
+        <div class="auth-divider">OR</div>
+
+        <button class="btn-auth success" onclick="switchAuth('signup')" style="background: var(--bg); color: var(--success); border: 2px solid var(--success); box-shadow: none;">Create New Account</button>
       </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="signup-block" class="auth-form" style="display:none;">
+        <div class="auth-form-header">
+          <h2 class="auth-form-title">Create an account</h2>
+          <p class="auth-form-sub">It's quick and easy.</p>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <input class="form-input" type="text" id="signup-fname" placeholder="First name">
+          </div>
+          <div class="input-group">
+            <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <input class="form-input" type="text" id="signup-lname" placeholder="Last name">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <input class="form-input" type="email" id="signup-email" placeholder="Email address">
+        </div>
+
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+          <input class="form-input" type="password" id="signup-pass" placeholder="New password">
+        </div>
+
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+          <input class="form-input" type="password" id="signup-confirm" placeholder="Confirm password">
+        </div>
+
+        <div class="terms-text">
+          By clicking Sign Up, you agree to our <a href="#">Terms</a>, <a href="#">Data Policy</a> and <a href="#">Cookie Policy</a>.
+        </div>
+
+        <button class="btn-auth success" onclick="handleSignup()">Sign Up</button>
+        
+        <div class="auth-links" style="margin-top: 24px;">
+          Already have an account? <a onclick="switchAuth('login')">Log in</a>
+        </div>
+      </div>
+
+      <!-- FORGOT PASSWORD FORM -->
+      <div id="forgot-block" class="auth-form" style="display:none;">
+        <div class="auth-form-header">
+          <h2 class="auth-form-title">Reset Password</h2>
+          <p class="auth-form-sub">Enter your email and a new password.</p>
+        </div>
+
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <input class="form-input" type="text" id="forgot-user" placeholder="Email address or Username">
+        </div>
+        
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+          <input class="form-input" type="password" id="forgot-pass" placeholder="New Password">
+        </div>
+
+        <button class="btn-auth primary" onclick="handleForgot()">Reset Password</button>
+        
+        <div class="auth-links" style="margin-top: 24px;">
+          <a onclick="switchAuth('login')">Back to Login</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -561,7 +508,7 @@ app.use((req, res) => {
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
             Feeling/Activity
           </div>
-          <button class="btn-auth" id="post-btn" onclick="handleCreatePost()" style="width:auto; padding: 6px 16px; margin-bottom: 0; opacity: 0.5; pointer-events: none; font-size: 15px;">Post</button>
+          <button class="btn-auth primary" id="post-btn" onclick="handleCreatePost()" style="width:auto; padding: 6px 16px; margin-bottom: 0; opacity: 0.5; pointer-events: none; font-size: 15px;">Post</button>
         </div>
         <div id="file-name" style="font-size:12px; color:var(--text-secondary); margin-top:8px;"></div>
       </div>
@@ -589,18 +536,25 @@ applyTheme(currentTheme);
 function toggleTheme() { currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; applyTheme(currentTheme); }
 
 /* ============================================================
-   APP LOGIC
+   APP LOGIC (IndexedDB, Auth, Feed, Tone)
    ============================================================ */
 var dbPromise = null;
 function getDB() {
   if (!dbPromise) {
     dbPromise = new Promise(function (resolve, reject) {
-      var req = indexedDB.open('friendlist', 1);
+      var req = indexedDB.open('friendlist', 2);
       req.onupgradeneeded = function (e) {
         var db = e.target.result;
         if (!db.objectStoreNames.contains('users')) {
           var u = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
           u.createIndex('username', 'username', { unique: true });
+          u.createIndex('email', 'email', { unique: true });
+        } else {
+          var tx = e.target.transaction;
+          var userStore = tx.objectStore('users');
+          if (!userStore.indexNames.contains('email')) {
+            userStore.createIndex('email', 'email', { unique: true });
+          }
         }
         if (!db.objectStoreNames.contains('posts')) db.createObjectStore('posts', { keyPath: 'id', autoIncrement: true });
         if (!db.objectStoreNames.contains('comments')) {
@@ -659,7 +613,11 @@ function getAvatarClass(name) {
   var hash = 0; for (var i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return AVATAR_CLASSES[Math.abs(hash) % AVATAR_CLASSES.length];
 }
-function initials(name) { return (name || '?').slice(0, 2).toUpperCase(); }
+function initials(name) { 
+  var parts = name.split(' ');
+  if(parts.length > 1) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase(); 
+}
 function fileToDataURL(file) {
   return new Promise((res, rej) => {
     var r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(file);
@@ -670,14 +628,7 @@ var session = null;
 try { session = JSON.parse(localStorage.getItem('session') || 'null'); } catch (e) { session = null; }
 function setSession(u) { session = u; if (u) localStorage.setItem('session', JSON.stringify(u)); else localStorage.removeItem('session'); }
 
-function showLanding() {
-  document.getElementById('landing-view').style.display = 'flex';
-  document.getElementById('auth-view').style.display = 'none';
-  document.getElementById('app-layout').style.display = 'none';
-}
-
 function showAuth(mode) {
-  document.getElementById('landing-view').style.display = 'none';
   document.getElementById('auth-view').style.display = 'flex';
   document.getElementById('app-layout').style.display = 'none';
   switchAuth(mode);
@@ -690,40 +641,69 @@ function switchAuth(mode) {
 }
 
 async function handleSignup() {
-  var u = document.getElementById('signup-user').value.trim();
-  var p = document.getElementById('signup-pass').value;
-  if (!u || !p) return alert('Fill all fields');
-  var ex = await dbGetOneByIndex('users', 'username', u);
-  if (ex) return alert('Username taken');
-  var id = await dbAdd('users', { username: u, password: p, createdAt: Date.now() });
-  setSession({ id: id, username: u }); showApp();
+  var fname = document.getElementById('signup-fname').value.trim();
+  var lname = document.getElementById('signup-lname').value.trim();
+  var email = document.getElementById('signup-email').value.trim();
+  var pass = document.getElementById('signup-pass').value;
+  var confirm = document.getElementById('signup-confirm').value;
+
+  if (!fname || !lname || !email || !pass || !confirm) return alert('Please fill in all fields.');
+  if (pass !== confirm) return alert('Passwords do not match.');
+  if (pass.length < 6) return alert('Password must be at least 6 characters.');
+
+  var username = fname + ' ' + lname;
+
+  var exEmail = await dbGetOneByIndex('users', 'email', email);
+  if (exEmail) return alert('This email is already registered.');
+  
+  var exUser = await dbGetOneByIndex('users', 'username', username);
+  if (exUser) return alert('A user with this name already exists. Please try a different variation.');
+
+  var id = await dbAdd('users', { username: username, email: email, password: pass, createdAt: Date.now() });
+  setSession({ id: id, username: username, email: email }); 
+  showApp();
 }
 
 async function handleLogin() {
-  var u = document.getElementById('login-user').value.trim();
+  var input = document.getElementById('login-user').value.trim();
   var p = document.getElementById('login-pass').value;
-  var user = await dbGetOneByIndex('users', 'username', u);
-  if (!user || user.password !== p) return alert('Invalid credentials');
-  setSession({ id: user.id, username: user.username }); showApp();
+  if (!input || !p) return alert('Please fill in all fields.');
+  
+  var user = await dbGetOneByIndex('users', 'email', input);
+  if (!user) {
+    user = await dbGetOneByIndex('users', 'username', input);
+  }
+
+  if (!user || user.password !== p) return alert('Invalid credentials.');
+  
+  setSession({ id: user.id, username: user.username, email: user.email }); 
+  showApp();
 }
 
 async function handleForgot() {
-  var u = document.getElementById('forgot-user').value.trim();
+  var input = document.getElementById('forgot-user').value.trim();
   var p = document.getElementById('forgot-pass').value;
-  if (!u || !p) return alert('Fill all fields');
-  var user = await dbGetOneByIndex('users', 'username', u);
+  if (!input || !p) return alert('Fill all fields');
+  
+  var user = await dbGetOneByIndex('users', 'email', input);
+  if (!user) {
+    user = await dbGetOneByIndex('users', 'username', input);
+  }
+
   if (!user) return alert('User not found');
-  user.password = p; await dbPut('users', user);
-  alert('Password reset. You can login now.'); switchAuth('login');
+  
+  user.password = p; 
+  await dbPut('users', user);
+  alert('Password reset. You can login now.'); 
+  switchAuth('login');
 }
 
 function handleLogout() {
   setSession(null);
-  showLanding();
+  showAuth('login');
 }
 
 function showApp() {
-  document.getElementById('landing-view').style.display = 'none';
   document.getElementById('auth-view').style.display = 'none';
   document.getElementById('app-layout').style.display = 'flex';
 
@@ -740,7 +720,7 @@ function showApp() {
   var compAv = document.getElementById('composer-avatar');
   compAv.textContent = ini; compAv.className = 'sidebar-avatar ' + avClass;
   
-  document.getElementById('post-text').placeholder = "What's on your mind, " + session.username + "?";
+  document.getElementById('post-text').placeholder = "What's on your mind, " + session.username.split(' ')[0] + "?";
 
   loadContacts();
   loadFeed();
@@ -951,7 +931,7 @@ async function analyzeTone(postId) {
    INIT
    ============================================================ */
 if (session) showApp();
-else showLanding();
+else showAuth('login');
 </script>
 </body>
 </html>`);
